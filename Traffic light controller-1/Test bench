@@ -1,0 +1,28 @@
+`timescale 1ns/1ps
+module trafficlight_tb;
+reg X,clock,reset;
+wire [1:0]hwy,cntry;
+trafficlight uut (X,clock,reset,hwy,cntry);
+initial begin
+    clock=0;
+    forever #5 clock=~clock;
+end
+initial begin
+    $monitor("%0dns:X=%b,clock=%b,reset=%b,hwy=%b,cntry=%b",
+                        $time,X,clock,reset,hwy,cntry);
+    clock=0;
+    reset=1;
+    X=0;
+    #10 reset=0;
+    #30;
+    X=1;
+    #10;
+    X=0;
+    #100;
+    X=1;
+    #10;
+    X=0;
+    #100;
+    $finish;
+end
+endmodule
