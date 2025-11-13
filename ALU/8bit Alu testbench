@@ -1,0 +1,41 @@
+module testbench();
+reg [7:0]A,B;
+reg [3:0]sel;
+wire [7:0]result;
+wire carry,zero,overflow;
+alu_8bit uut(A,B,sel,result,carry,zero,overflow);
+initial begin
+$monitor("%0dns:A=%b,B=%b,sel=%b,result=%b,carry=%b,zero=%b,overflow=%b",
+    $time,A,B,sel,result,carry,zero,overflow);
+A=8'b00101010;B=8'b00000101;
+sel=4'b0000; #10;
+sel=4'b0001; #10;
+sel=4'b0010; #10;
+sel=4'b0011; #10;
+sel=4'b0100; #10;
+sel=4'b0101; #10;
+sel=4'b0110; #10;
+sel=4'b0111; #10;
+sel=4'b1000; #10;
+sel=4'b1001; #10;
+sel=4'b1010; #10;
+sel=4'b1011; #10;
+sel=4'b1100; #10;
+sel=4'b1101; #10;
+sel=4'b1110; #10;
+sel=4'b1111; #10;
+//caryy
+A=8'b11111111;B=8'b00000001;
+sel=4'b0000; #10;
+sel=4'b0001; #10;
+//overflow
+A=8'b01111111;B=8'b00000001;
+sel=4'b0000; #10;
+sel=4'b0001; #10;
+//both carry and overflow
+A=8'b10000000;B=8'b10000000;
+sel=4'b0000; #10;
+sel=4'b0001; #10;
+$finish;
+end           
+endmodule
