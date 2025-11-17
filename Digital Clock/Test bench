@@ -1,0 +1,21 @@
+module tb_top_clock;
+reg clk;
+reg rst;
+wire [5:0]sec;
+wire [5:0]min;
+wire [4:0]hr;
+digital_clock uut(.clk(clk),.rst(rst),.sec(sec),
+        .min(min),.hr(hr));
+always #5 clk=~clk;
+initial begin
+   clk=0;
+   rst=1;
+   #20;
+   rst=0;
+   #2000;  
+   $finish;
+ end
+initial begin
+        $monitor("%0dns:sec=%d,min=%d,hr=%d",$time,sec,min,hr);
+    end
+endmodule
