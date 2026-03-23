@@ -3,7 +3,7 @@ reg signed [3:0] A, B;
 wire signed [7:0] P;
 booth_multiplier uut (.A(A), .B(B), .P(P));
 initial begin
-  $monitor("%0dns:A=%b,B=%b,P=%b,|A=%d,B=%d,P=%d",
+  $monitor("%0dns:A=%b,B=%b,P=%b,A=%d,B=%d,P=%d",
     $time,A,B,P,|A,B,P);
     A = 7;  B = 7;   #10;
     A = -8; B = 7;   #10;  
