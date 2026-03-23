@@ -20,7 +20,7 @@ module booth_multiplier (
                 default: ;
             endcase
             // Arithmetic right shift
-            {A_reg, Q, Q_1} = {A_reg, Q, Q_1} >>> 1;
+            {A_reg, Q, Q_1} = {A_reg[8], A_reg, Q};
         end
         P = {A_reg[7:0], Q};
     end
