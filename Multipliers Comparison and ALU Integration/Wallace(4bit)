@@ -1,0 +1,32 @@
+module wallace4 (
+    input  [3:0] A,
+    input  [3:0] B,
+    output [7:0] P
+);
+
+    // Partial products
+    wire [3:0] pp0 = A & {4{B[0]}};
+    wire [3:0] pp1 = A & {4{B[1]}};
+    wire [3:0] pp2 = A & {4{B[2]}};
+    wire [3:0] pp3 = A & {4{B[3]}};
+
+    // Shifted partial products
+    wire [7:0] X0 = {4'b0000, pp0};        // no shift
+    wire [7:0] X1 = {3'b000, pp1, 1'b0};   // shift 1
+    wire [7:0] X2 = {2'b00, pp2, 2'b00};   // shift 2
+    wire [7:0] X3 = {1'b0, pp3, 3'b000};   // shift 3
+
+    // ---------- Stage 1 (CSA) ----------
+    wire [7:0] S1, C1;
+    assign S1 = X0 ^ X1 ^ X2;
+    assign C1 = (X0 & X1) | (X1 & X2) | (X0 & X2);
+
+    // ---------- Stage 2 (CSA) ----------
+    wire [7:0] S2, C2;
+    assign S2 = S1 ^ (C1 << 1) ^ X3;
+    assign C2 = (S1 & (C1 << 1)) | ((C1 << 1) & X3) | (S1 & X3);
+
+    // ---------- Final Addition ----------
+    assign P = S2 + (C2 << 1);
+
+endmodule
