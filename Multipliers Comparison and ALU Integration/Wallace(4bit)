@@ -19,7 +19,7 @@ module calcblock(output G, P, input Gi, Pi, Gip, Pip);
 endmodule
 
 
-//================ RECURSIVE CARRY ADDER =================//
+//RECURSIVE CARRY ADDER//
 
 module eight_bit_Recursive_Carry_Adder(
     output [7:0] sum,
@@ -57,7 +57,7 @@ module eight_bit_Recursive_Carry_Adder(
 endmodule
 
 
-//================ 3:2 COMPRESSOR =================//
+//3:2 COMPRESSOR//
 
 module threeleveladder8(
     input  [7:0] x,
@@ -71,7 +71,7 @@ module threeleveladder8(
 endmodule
 
 
-//================ PARTIAL PRODUCTS =================//
+//PARTIAL PRODUCTS//
 
 module partialmulti4(
     output [7:0] p0, p1, p2, p3,
@@ -87,7 +87,7 @@ module partialmulti4(
 endmodule
 
 
-//================ TOP MODULE (FIXED) =================//
+//TOP MODULE //
 
 module four_bit_wallace_multiplier(
     output [7:0] product,
@@ -103,13 +103,13 @@ module four_bit_wallace_multiplier(
     wire [7:0] s11, c11, c11_shift;
     threeleveladder8 add11(p0, p1, p2, s11, c11);
 
-    assign c11_shift = c11 << 1;   // ✅ FIX
+    assign c11_shift = c11 << 1;   
 
     // Second stage
     wire [7:0] s21, c21, c21_shift;
     threeleveladder8 add21(s11, c11_shift, p3, s21, c21);
 
-    assign c21_shift = c21 << 1;   // ✅ FIX
+    assign c21_shift = c21 << 1;   
 
     // Final addition
     wire cout;
