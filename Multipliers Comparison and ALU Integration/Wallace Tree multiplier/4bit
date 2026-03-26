@@ -1,0 +1,85 @@
+// Half Adder
+module HalfAdder(input A, B, output sum, carry);
+    assign sum = A ^ B;
+    assign carry = A & B;
+endmodule
+
+// Full Adder
+module FullAdder(input A, B, Cin, output sum, carry);
+    assign sum = A ^ B ^ Cin;
+    assign carry = (A & B) | (B & Cin) | (Cin & A);
+endmodule
+module wallace4(
+    input [3:0] A,
+    input [3:0] B,
+    output [7:0] P
+);
+
+    // Partial products
+    wire p00 = A[0]&B[0];
+    wire p01 = A[0]&B[1];
+    wire p02 = A[0]&B[2];
+    wire p03 = A[0]&B[3];
+
+    wire p10 = A[1]&B[0];
+    wire p11 = A[1]&B[1];
+    wire p12 = A[1]&B[2];
+    wire p13 = A[1]&B[3];
+
+    wire p20 = A[2]&B[0];
+    wire p21 = A[2]&B[1];
+    wire p22 = A[2]&B[2];
+    wire p23 = A[2]&B[3];
+
+    wire p30 = A[3]&B[0];
+    wire p31 = A[3]&B[1];
+    wire p32 = A[3]&B[2];
+    wire p33 = A[3]&B[3];
+
+    // Stage 1
+    wire s1, c1;
+    HalfAdder HA1(p01, p10, s1, c1);
+
+    wire s2, c2;
+    FullAdder FA1(p02, p11, p20, s2, c2);
+
+    wire s3, c3;
+    FullAdder FA2(p03, p12, p21, s3, c3);
+
+    wire s4, c4;
+    FullAdder FA3(p13, p22, p31, s4, c4);
+
+    wire s5, c5;
+    HalfAdder HA2(p23, p32, s5, c5);
+
+    // Stage 2
+    wire s6, c6;
+    FullAdder FA4(s2, c1, p30, s6, c6);
+
+    wire s7, c7;
+    FullAdder FA5(s3, c2, c6, s7, c7);
+
+    wire s8, c8;
+    FullAdder FA6(s4, c3, c7, s8, c8);
+
+    wire s9, c9;
+    FullAdder FA7(s5, c4, c8, s9, c9);
+
+    wire s10, c10;
+    FullAdder FA8(p33, c5, c9, s10, c10);
+
+    // Final addition (Ripple Carry)
+    assign P[0] = p00;
+    assign P[1] = s1;
+
+    wire c11, c12, c13, c14, c15;
+
+    FullAdder FA9 (s6, 1'b0, 1'b0, P[2], c11);
+    FullAdder FA10(s7, c11, 1'b0, P[3], c12);
+    FullAdder FA11(s8, c12, 1'b0, P[4], c13);
+    FullAdder FA12(s9, c13, 1'b0, P[5], c14);
+    FullAdder FA13(s10, c14, 1'b0, P[6], c15);
+
+    assign P[7] = c10 | c15;
+
+endmodule
