@@ -25,6 +25,49 @@ module booth_multiplier (
         P = {A_reg[15:0], Q};
     end
 endmodule
+ //module booth_multiplier (
+    input  signed [15:0] A,
+    input  signed [15:0] B,
+    output reg signed [31:0] P
+);
+
+    integer i;
+
+    reg signed [16:0] ACC;   // accumulator
+    reg signed [16:0] M;     // multiplicand
+    reg signed [15:0] Q;     // multiplier
+    reg Q_1;                 // previous bit
+
+    always @(*) begin
+        // Initialize
+        ACC = 17'd0;
+        M   = {A[15], A};   // sign extend
+        Q   = B;
+        Q_1 = 1'b0;
+
+        // Booth multiplication
+        for (i = 0; i < 16; i = i + 1) begin
+
+            // Booth encoding
+            case ({Q[0], Q_1})
+                2'b01: ACC = ACC + M;
+                2'b10: ACC = ACC - M;
+                default: ;
+            endcase
+
+            // Arithmetic right shift
+            Q_1 = Q[0];
+            Q   = {ACC[0], Q[15:1]};
+            ACC = {ACC[16], ACC[16:1]};
+        end
+
+        // Final product
+        P = {ACC[15:0], Q};
+
+    end
+
+endmodule
+
 
 
 
